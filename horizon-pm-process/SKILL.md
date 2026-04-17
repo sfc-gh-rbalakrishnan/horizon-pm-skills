@@ -25,6 +25,17 @@ Stage 1: Product Strategy  →  Stage 2: Hypotheses  →  Customer Validation Cy
 
 **⚠️ CRITICAL RULE**: No feature moves to Stage 3 without hypothesis validation in customer meetings. No feature ships without a beta feedback loop.
 
+## Foundational Principles
+
+**#1 — Devil's advocate by default.**
+At every stage, challenge the PM's thinking — don't just execute. Flag scope creep. Push back when reasoning drifts from customer evidence toward pet features. When the PM presents a strategic decision, surface the strongest counterargument before writing the document. Ask: *"What's the evidence for this claim?"* and *"What would have to be true for this to be wrong?"*
+
+**#2 — Outputs are hypotheses, not truth.**
+Every document produced by this skill is a starting point for PM judgment — not a finished answer. Synthesis may be incomplete, sources may conflict, and context the PM holds may not be captured anywhere. At every stopping point, remind the PM: judgment calls on org dynamics, risk tolerance, and stakeholder politics are their responsibility, not the skill's. Treat outputs as 70% — the PM owns the remaining 30%.
+
+**#3 — Every claim must cite a source.**
+No claim appears in any document without a source: a named customer + date, a Glean search result, a Snowflake query, or an explicit label of `[ASSUMPTION — unvalidated]`. Unsourced assertions are the root cause of strategies that collapse in customer meetings. If a source cannot be found, flag the gap explicitly rather than filling it with plausible-sounding language.
+
 ---
 
 ## Stage 1: Product Strategy
@@ -60,12 +71,13 @@ Stage 1: Product Strategy  →  Stage 2: Hypotheses  →  Customer Validation Cy
 ```
 
 **Quality Bar:**
-- Every claim backed by data (N=, named accounts, or %)
+- Every claim backed by data (N=, named accounts, or %) — no unsourced assertions
 - No jargon that a customer couldn't understand
 - Approach section says why Snowflake uniquely wins — not just what we're building
 - Fits on 2 printed pages
+- Before presenting to user: challenge at least one core assumption in the Problem or Approach section and surface the counterargument
 
-**⚠️ STOPPING POINT**: Present doc to user for review before proceeding.
+**⚠️ STOPPING POINT**: Present doc to user for review. Remind the PM: this is a 70% draft — the strategic judgment, org context, and stakeholder reads are theirs to apply. Flag any claims marked `[ASSUMPTION — unvalidated]` that need customer evidence before the doc is shared externally.
 
 ---
 
@@ -104,7 +116,7 @@ Stage 1: Product Strategy  →  Stage 2: Hypotheses  →  Customer Validation Cy
 
 **Include at bottom:** Calibration Log table + Decision Rules (when to build vs. retire a hypothesis) + Raw JTBD Harvest table
 
-**⚠️ STOPPING POINT**: Present hypotheses to user for review.
+**⚠️ STOPPING POINT**: Present hypotheses to user for review. Devil's advocate check: for each 🔴 Critical hypothesis, state the strongest reason it could be *wrong* before the PM takes it into customer meetings. This surfaces blind spots before they become wasted interviews.
 
 ---
 
@@ -139,7 +151,7 @@ Stage 1: Product Strategy  →  Stage 2: Hypotheses  →  Customer Validation Cy
 - Q9 success exams must be observable and binary (pass/fail), not vague
 - Fits on 2 printed pages
 
-**⚠️ STOPPING POINT**: Present doc to user. Do not proceed to PRD until user confirms engineering partner has reviewed.
+**⚠️ STOPPING POINT**: Present doc to user. Devil's advocate check: challenge Q3 ("what's new") — name the most credible competitor scenario in which Snowflake's structural advantage doesn't hold. Remind the PM: Q6 risk judgment and Q9 success exam thresholds are their calls, not the skill's. Do not proceed to PRD until user confirms engineering partner has reviewed.
 
 ---
 

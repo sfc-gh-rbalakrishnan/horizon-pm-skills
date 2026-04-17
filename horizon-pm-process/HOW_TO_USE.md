@@ -21,6 +21,28 @@ Or tag it directly with `$horizon-pm-process` followed by your request.
 
 ---
 
+## What This Skill Is — and Isn't
+
+This is an AI-powered assistant. Before you rely on it, understand what that means.
+
+**What it does well:**
+- Augments the work you were already going to do — faster first drafts, structured templates, research aggregation
+- Reduces friction at the stages where PMs typically stall: blank-page strategy docs, hypothesis structuring, Heilmeier formatting
+- Flags uncertainty explicitly — every unsourced claim is labeled `[ASSUMPTION — unvalidated]`, and every stopping point reminds you what the skill can't know
+
+**What it doesn't do:**
+- It does not replace your judgment on org dynamics, stakeholder politics, or risk tolerance
+- It does not know what conversations happened in Slack last week or what your engineering partner is really worried about
+- It does not validate your strategy — customers do
+
+**The 70/30 rule:**
+Treat every output as 70% done. The remaining 30% is your job: applying context the skill can't access, making calls the skill can't make, and deciding what's true before you share anything externally.
+
+**On uncertainty:**
+The skill will tell you when it's operating on assumptions. When it does, that is not a bug — it is the skill being honest. An overconfident AI that fills every gap with plausible-sounding language is more dangerous than one that flags gaps clearly. Treat `[ASSUMPTION — unvalidated]` labels as a checklist of customer conversations you still need to run.
+
+---
+
 ## The Principle: Why This Process Exists
 
 Most product teams fail not because they can't ship — but because they ship the wrong thing. They write PRDs from intuition, build features customers never asked for, and launch into silence.

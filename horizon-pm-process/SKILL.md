@@ -16,6 +16,8 @@ Stage 1: Product Strategy  →  Stage 2: Hypotheses  →  Customer Validation Cy
                                                               ↓ (validated)
                                                        Stage 3: Heilmeier Review
                                                               ↓ (engineering approved)
+                                                  Stage 3.5: Deep Research Gate ⚑ MANDATORY
+                                                              ↓ (gaps addressed or accepted)
                                                        Stage 4: PRD (if required)
                                                               ↓
                                                        Stage 5: Beta Release
@@ -155,6 +157,93 @@ No claim appears in any document without a source: a named customer + date, a Gl
 
 ---
 
+## Stage 3.5: Deep Research Gate ⚑ MANDATORY before PRD
+
+**When to use:** After Heilmeier is approved and engineering has committed. Before writing a single line of the PRD.
+
+**Goal:** Surface what published research, competitor implementations, and analyst coverage reveals about this problem space that the current strategy and Heilmeier may have missed. A PRD that misses what's obvious in a deep research paper is a PRD that will be embarrassed in customer meetings.
+
+**Rule (non-negotiable):** No PRD is started until the PM has either (a) run deep research and addressed the gaps, or (b) reviewed the gap report and explicitly accepted each unaddressed gap with a rationale.
+
+### Automatic Deep Research Option
+
+When the user reaches this stage, offer:
+
+> "Before writing the PRD, I can run a deep research pass on [feature topic] and give you a gap report against your current Heilmeier. This takes a few minutes and will surface any competitor implementations, analyst takes, or customer pain patterns your current draft may have missed. Run it? (Yes / Skip and proceed)"
+
+**If user says Yes — run the following research protocol:**
+
+**Step 1 — Define the research scope.** Extract from the Heilmeier doc:
+- The core problem being solved (Q1)
+- The current approach / differentiator (Q3)
+- The target customer and outcome (Q4, Q5)
+- The key risks already identified (Q6)
+
+**Step 2 — Run multi-source research.** For each source below, search and extract findings:
+
+| Source | What to Search | Tool |
+|--------|---------------|------|
+| Competitor implementations | "[problem area] [competitor names] implementation approach site:[competitor-docs]" | Glean web search |
+| Analyst / practitioner coverage | "[problem area] best practices patterns challenges" | Glean search |
+| Customer voice (community) | "[problem area] pain points Reddit Stack Overflow Hacker News" | Glean / web |
+| Academic / technical papers | "[problem area] research survey 2024 2025 2026" | Web search |
+| Internal customer signals | "[feature topic] customer feedback request" | Glean (internal) |
+| Snowflake community / docs | "[feature topic] site:community.snowflake.com OR docs.snowflake.com" | Glean / web |
+
+Search 4–6 of these sources. Collect the top 3–5 findings per source. Summarize in bullets — do not quote at length.
+
+**Step 3 — Gap Analysis against Heilmeier.** Produce a structured gap report:
+
+```markdown
+## Deep Research Gap Report: [Feature Name]
+**Research date:** [Date]
+**Sources searched:** [List]
+
+### What the Research Confirms (✅ already in Heilmeier)
+- [Finding] — consistent with our Q3 / Q4 / Q5 position
+
+### What the Research Adds (🟡 not in Heilmeier but worth addressing)
+| Gap | What research shows | Implication for PRD | PM decision |
+|-----|-------------------|---------------------|-------------|
+| [gap] | [finding] | [should we add/change X?] | Address / Accept / Defer |
+
+### What the Research Contradicts (🔴 conflicts with our current strategy)
+| Conflict | What research shows | What our Heilmeier says | PM decision |
+|----------|-------------------|------------------------|-------------|
+| [conflict] | [finding] | [our current claim] | Update Heilmeier / Accept risk / Investigate |
+
+### Competitor Implementations Found
+| Competitor | What they built | How it differs from our approach | Threat level |
+|-----------|----------------|----------------------------------|--------------|
+| [name] | [feature] | [delta] | Low / Medium / High |
+
+### Recommended PRD Additions (from research)
+1. [Specific section, requirement, or open question to add to the PRD]
+2. ...
+```
+
+**Step 4 — Present the gap report to the PM.** Ask for a decision on each 🟡 and 🔴 item:
+- **Address** → add to PRD scope or update Heilmeier before writing PRD
+- **Accept** → acknowledge gap, note rationale, proceed with current scope  
+- **Defer** → log as future work, reference in PRD Open Questions section
+- **Investigate** → flag as a customer validation question before PRD is finalized
+
+**Step 5 — Write the Research Attestation block** at the top of the PRD:
+
+```markdown
+## Research Attestation
+**Deep research run:** [Yes / Skipped — reason]
+**Date:** [Date] | **Sources:** [N sources]
+**Gaps addressed:** [N] | **Gaps accepted:** [N] | **Gaps deferred:** [N]
+[Link or inline: Deep Research Gap Report]
+```
+
+**If user says Skip:** Write the attestation block with `Deep research run: Skipped` and require the PM to state a reason. Log it. Proceed to PRD.
+
+**⚠️ STOPPING POINT**: Do not begin PRD writing until the gap report is reviewed and each 🔴 conflict has a PM decision. Present the gap report and wait for explicit confirmation before Stage 4.
+
+---
+
 ## Stage 4: PRD (Engineering-Required Only)
 
 **When to use:** Engineering partner explicitly requests a PRD. Not written by default.
@@ -163,11 +252,12 @@ No claim appears in any document without a source: a named customer + date, a Gl
 
 **Actions:**
 
-1. **Ask** user to confirm engineering partner has requested a PRD and which feature it covers
-2. **Load** `references/jobs_to_be_done.md` and `references/cuj_guide.md` before writing any JTBD or CUJ content
-3. **Harvest** JTBD candidates from the Hypotheses doc (Raw JTBD Harvest section) — refine into validated statements using the quality rubric in `references/jobs_to_be_done.md`
-4. **Map** each JTBD to at least one CUJ using the CUJ coverage map format from `references/cuj_guide.md`
-5. **Write** to `<workspace>/prd_[feature_name].md`
+1. **Confirm** deep research gap report has been completed (Stage 3.5 attestation block exists)
+2. **Ask** user to confirm engineering partner has requested a PRD and which feature it covers
+3. **Load** `references/jobs_to_be_done.md` and `references/cuj_guide.md` before writing any JTBD or CUJ content
+4. **Harvest** JTBD candidates from the Hypotheses doc (Raw JTBD Harvest section) — refine into validated statements using the quality rubric in `references/jobs_to_be_done.md`
+5. **Map** each JTBD to at least one CUJ using the CUJ coverage map format from `references/cuj_guide.md`
+6. **Write** to `<workspace>/prd_[feature_name].md`
 
 **Before writing JTBDs — check the quality bar:**
 - Is the situation specific and real (heard from a customer, not invented)?
@@ -260,10 +350,6 @@ Failure States:
 
 **⚠️ STOPPING POINT**: Confirm with user that technical requirements have been reviewed by engineering lead.
 
----
-
-## Stage 5: Beta Release Plan
-
 **When to use:** Feature is ready to ship to limited customers. Validates whether the market exists, solution works, and mass market will adopt.
 
 **Goal:** Ship fast to 3-5 accounts. Learn before GA. Calibrate Stage 1 and Stage 2 based on results.
@@ -328,6 +414,7 @@ Every two weeks:
 - ✋ Stage 1: Product Strategy approved by user
 - ✋ Stage 2: Hypotheses approved before customer outreach
 - ✋ Stage 3: Heilmeier reviewed by engineering partner
+- ⚑ Stage 3.5: Deep Research gap report reviewed; each 🔴 conflict has a PM decision
 - ✋ Stage 4: PRD technical requirements signed off
 - ✋ Stage 5: Beta accounts confirmed (committed, not just interested)
 
@@ -337,5 +424,6 @@ All documents written to `<workspace>/<project_name>/` directory:
 - `product_strategy.md`
 - `hypotheses.md`
 - `heilmeier_<feature>.md`
+- `deep_research_gap_<feature>.md` (Stage 3.5 output)
 - `prd_<feature>.md` (if required)
 - `beta_plan_<feature>.md`

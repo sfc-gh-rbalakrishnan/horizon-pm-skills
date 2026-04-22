@@ -237,6 +237,61 @@ Fill in the Hypothesis Validation Table before the meeting (pull from hypotheses
 Fill in Problem Scoring live during Part B of the interview.
 ```
 
+---
+
+### 2B-Post — Analyze Meeting Summary and Fill Discovery Notes
+
+**Trigger phrases:** "fill in discovery notes", "analyze meeting summary", "summarize the discovery meeting", "update discovery notes from meeting", "here's the meeting summary", "meeting transcript"
+
+When any of these are detected, run the following workflow:
+
+**Step 1 — Collect inputs via ask_user_question (one call):**
+- Question 1 (header: "Notes File"): "What is the full path to the discovery notes file to fill in?" — type: text, defaultValue: `<workspace>/discovery/customer_YYYY-MM-DD.md`
+- Question 2 (header: "Hypotheses File"): "What is the full path to your hypotheses.md file? (Used to match hypothesis rejection criteria against the summary.)" — type: text, defaultValue: `<workspace>/hypotheses.md`
+- Question 3 (header: "Meeting Summary"): "Paste the AI-generated meeting summary or transcript below." — type: text, defaultValue: `[paste summary here]`
+
+**Step 2 — Read both files** using the Read tool:
+- Read the discovery notes file to extract the hypothesis list and problem list already in the template
+- Read hypotheses.md to load the `Validated if` / `Rejected if` criteria for each hypothesis
+
+**Step 3 — Analyze the meeting summary and produce suggestions.** For each section of the notes template, derive a suggestion from the summary:
+
+| Section | What to extract |
+|---------|----------------|
+| **Context** | Names, titles, Snowflake usage, AI deployment stage mentioned |
+| **tl;dr** | The 3 most signal-dense statements made — one per area (problems, platform, commercial). Be specific. No "they are interested in X" — state the strongest evidence signal heard. |
+| **Recommendations** | Concrete next actions: follow-ups promised, design partner ask if applicable, escalation triggers |
+| **Hypothesis Validation Table** | For each hypothesis in the file, match the summary against the `Validated if` / `Rejected if` criteria. Assign: Validated / Partially / Rejected / No data. Quote the specific customer statement that drove the call. Flag any hypothesis where the summary is ambiguous — mark as "Insufficient signal — needs follow-up question" |
+| **Problem Scoring** | For each problem mentioned in the summary, infer Severity (1–4) and Urgency (1–4) based on language used. Use this rubric: words like "blocking", "can't go to production", "breach risk" → Severity 4; "we're aware", "on the list" → Severity 2. Words like "we need this now", "CISO is asking" → Urgency 4; "would be nice in the future" → Urgency 1. Show your reasoning in a bracketed note. |
+| **Forced-ranking close answer** | Quote or paraphrase the customer's answer to "which three problems would you prioritize?" — if not stated, mark as "Not captured" |
+| **Part C notes** | Extract any platform/architecture signals: AI platforms named, policy granularity discussed, RAG usage |
+| **Part D notes** | Extract commercial signals: build vs. buy preference stated, budget signals, third-party tools mentioned |
+| **JTBD Harvest** | Identify statements matching the pattern: situation + motivation + outcome. Quote the verbatim phrase next to the structured JTBD. Only include if the situation is specific — not generic statements about AI. |
+
+**Step 4 — Present the draft to the PM for review.** Output the full filled-in doc as a markdown preview in the chat. Do not write to file yet. Add a `⚠️ SUGGESTION — not yet written to file` header at the top.
+
+After showing the preview, flag any low-confidence calls explicitly:
+```
+Low-confidence suggestions (verify before accepting):
+- H3 Validation Status: Marked "Partially" but only one indirect signal found — "[quote]". Suggest asking a follow-up question to confirm.
+- P5 Severity: Marked 3, but customer language was ambiguous ("we think about it"). Could be 2.
+- JTBD #2: Situation is generic — may not qualify. Flag for PM judgment.
+```
+
+**Step 5 — Gate: explicit PM approval required before writing.**
+
+Use `ask_user_question` with a single question:
+- Header: "Approve"
+- Question: "Do you approve writing this filled-in draft to the discovery notes file? You can also ask me to adjust specific sections before writing."
+- Options:
+  - `Yes — write to file`: Skill writes the filled content to the file path from Step 1, replacing the blank template. Confirms with file path.
+  - `No — discard`: Skill discards the draft and confirms nothing was written.
+  - `Edit first`: Skill asks "Which section(s) would you like me to adjust?" and re-presents the updated preview. Repeat Step 5 until PM approves or discards.
+
+**CRITICAL RULE: Never write to the file until the PM explicitly selects "Yes — write to file".** A `No` or `Edit first` response must never trigger a write. If the PM approves, write only the sections that had suggestions — preserve any sections the PM filled in manually.
+
+---
+
 **Interview format:** 45–60 minutes. Run in four parts:
 - **Part A (Current State):** Open conversation — do not mention your hypotheses yet. Ask about their current AI deployment, existing guardrails, and what has blocked production. Listen for unprompted problems.
 - **Part B (Problem Validation):** Go through your problem list. Score Severity and Urgency for each. Forced-ranking close: *"If you could only solve three of these in the next six months, which three and why?"*

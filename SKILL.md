@@ -125,40 +125,116 @@ No claim appears in any document without a source: a named customer + date, a Gl
 
 ### 2B — Customer Discovery Notes Doc (one per meeting)
 
-Before each customer meeting, create a discovery notes file: `<workspace>/discovery/[customer_name]_[date].md`
+**Trigger phrases:** "prepare for a customer meeting", "create discovery notes", "new discovery doc", "meeting with [customer]", "customer prep"
 
-**Template:**
+When any of these are detected, immediately run the following workflow. Do not ask for all inputs in text — use `ask_user_question` tool:
+
+**Step 1 — Collect inputs via ask_user_question:**
+Ask two questions together in one call:
+- Question 1 (header: "Folder"): "Where should I create the discovery notes file? Provide the folder path." — type: text, defaultValue: `<workspace>/discovery`
+- Question 2 (header: "Customer"): "What is the customer name?" — type: text, defaultValue: `Customer Name`
+- Question 3 (header: "Topic"): "What is the discovery topic or feature area?" — type: text, defaultValue: `AI Guardrails`
+
+**Step 2 — Compute file name and title:**
+- Date: use today's date in `YYYY-MM-DD` format (get from environment)
+- File name: `[folder]/[customer_name_lowercased_underscored]_[YYYY-MM-DD].md`
+- Document title: `# Customer Discovery Notes — [Customer Name] — [YYYY-MM-DD] — [Discovery Topic]`
+
+**Step 3 — Create the file using the Write tool** with this exact template, substituting the three values:
+
 ```markdown
-# Customer Discovery Notes — [Customer Name] — [Date]
+# Customer Discovery Notes — [Customer Name] — [Date] — [Discovery Topic]
+
+**Interviewer:** [Your name]
+**AE / SE in room:** 
+**Customer attendees:** 
+
+---
 
 ## Context
-[Who attended: customer name + title, AE/SE names, Snowflake surfaces they use today]
+[Who attended: customer name + title, their role in AI/data decisions, how they use Snowflake today, stage of AI deployment]
+
+---
 
 ## tl;dr
-[3 bullets max: one per area tested — the single most important signal from each]
+- 
+- 
+- 
+
+*(3 bullets max — one most important signal per area tested)*
+
+---
 
 ## Recommendations
-[Immediate actions: follow-up items, design partner ask, escalation needed]
+- [ ] 
+- [ ] 
+
+*(Immediate actions: follow-up items, design partner ask, escalation needed)*
+
+---
 
 ## Hypothesis Validation Table
 
 | Hypothesis | Validation Status | Evidence Summary | Customer Feedback (verbatim or close paraphrase) |
 |-----------|------------------|-----------------|--------------------------------------------------|
-| H1 — [Title] | Validated / Partially / Rejected / No data | [1-2 sentences] | "[quote or paraphrase]" |
-| H2 — ... | | | |
+| H1 — | Validated / Partially / Rejected / No data | | "" |
+| H2 — | Validated / Partially / Rejected / No data | | "" |
+| H3 — | Validated / Partially / Rejected / No data | | "" |
+| H4 — | Validated / Partially / Rejected / No data | | "" |
+| H5 — | Validated / Partially / Rejected / No data | | "" |
+
+---
 
 ## Problem Scoring (Part B)
 
-Rate each problem on two dimensions:
-- **Severity (1–4):** 1=Not a problem → 2=Aware but not addressing → 3=Compliance/audit risk → 4=Active blocker or breach risk
-- **Urgency (1–4):** 1=Not needed → 2=Nice to have → 3=Needed in 12 months → 4=Blocking production today
+**Severity scale:** 1 = Not a problem → 2 = Aware but not addressing → 3 = Compliance/audit risk → 4 = Active blocker or breach risk
+**Urgency scale:** 1 = Not needed → 2 = Nice to have → 3 = Needed in 12 months → 4 = Blocking production today
+**Priority Score = Severity × Urgency** (max 16)
 
-| Problem | Severity (1–4) | Urgency (1–4) | Priority Score (S×U) | Business Impact | Current Workaround |
-|---------|---------------|--------------|---------------------|----------------|-------------------|
-| H1 — [name] | | | | | |
+| Problem | Severity (1–4) | Urgency (1–4) | Priority Score (S×U) | Business Impact if Unsolved | Current Workaround |
+|---------|---------------|--------------|---------------------|----------------------------|-------------------|
+| | | | | | |
+| | | | | | |
+| | | | | | |
+
+**Forced-ranking close (ask at end of Part B):** *"If you could only solve three of these in the next six months, which three and why?"*
+
+Customer answer:
+
+---
+
+## Part C — Platform & Architecture Notes
+- AI platforms in use (Cortex / Bedrock / Azure AI / self-hosted):
+- Policy granularity need (per-account / per-team / central override):
+- Sensitive data handling today:
+- RAG in use? Sanitization step on retrieved content?:
+
+---
+
+## Part D — Commercial & Build vs. Buy Notes
+- Native (Snowflake) vs. third-party preference and reason:
+- Budget owner for AI security/governance investment:
+- Timeline to invest:
+- Current or evaluated third-party tools:
+
+---
 
 ## JTBD Harvest
-- When [situation], I want to [motivation], so I can [outcome] — "[verbatim trigger phrase heard]"
+
+*(Log verbatim trigger phrases as heard — refine into validated statements after ≥2 customers say the same thing)*
+
+- When [situation], I want to [motivation], so I can [outcome] — "[verbatim phrase]"
+- 
+- 
+```
+
+**Step 4 — Confirm to the PM:** After writing the file, output:
+```
+Discovery notes file created: [full file path]
+Title: Customer Discovery Notes — [Customer Name] — [Date] — [Discovery Topic]
+
+Fill in the Hypothesis Validation Table before the meeting (pull from hypotheses.md).
+Fill in Problem Scoring live during Part B of the interview.
 ```
 
 **Interview format:** 45–60 minutes. Run in four parts:
